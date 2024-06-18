@@ -806,7 +806,7 @@ module.exports = {
 
           await games.findByIdAndUpdate(game_id, {
             $set: { current_round_id: create_round_details._id },
-            $push: { clue_ids: find_clue._id },
+            $push: { clue_ids: find_clue?._id },
           });
 
           let res_data = await socketSuccessRes(
@@ -861,7 +861,7 @@ module.exports = {
 
             await games.findByIdAndUpdate(game_id, {
               $set: { current_round_id: create_round_details._id },
-              $push: { clue_ids: find_clue._id },
+              $push: { clue_ids: find_clue?._id },
             });
 
             var res_data = await socketSuccessRes(
