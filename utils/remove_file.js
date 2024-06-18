@@ -6,13 +6,13 @@ const removeFile = (data) => {
     const filepath = "./uploads/" + data;
 
     if (Array.isArray(data)) {
-      data.map((images) => {
+      data.forEach((images) => {
         const filepath = "./uploads/" + images;
         fs.unlink(filepath, function (error) {
           if (error) return error;
         });
       });
-    } else {
+    }else {
       // Delete file here if error occurred.
       fs.unlink(filepath, function (error) {
         if (error) return error;
@@ -24,3 +24,4 @@ const removeFile = (data) => {
 };
 
 module.exports = { removeFile };
+

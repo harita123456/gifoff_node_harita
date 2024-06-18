@@ -1,5 +1,4 @@
 var nodemailer = require("nodemailer");
-const fs = require("fs");
 
 const sendOtpCode = async (data) => {
   console.log("data is email", data);

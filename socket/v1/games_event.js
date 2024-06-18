@@ -595,7 +595,7 @@ module.exports = {
               })
               .countDocuments();
 
-            var is_all_submitted = false;
+            let is_all_submitted = false;
 
             if (get_all_data == findMatch.players_ids.length - 1) {
               is_all_submitted = true;
@@ -1094,7 +1094,7 @@ module.exports = {
   },
 
   revealResult: async (data) => {
-    const { game_id, round, user_id } = data;
+    const { game_id, round } = data;
 
     // Check if there's already a lock for this game
     if (gameLocks[game_id]) {
@@ -1145,7 +1145,7 @@ module.exports = {
         const randomIndex = Math.floor(Math.random() * strings.length);
         const randomString = strings[randomIndex];
 
-        const round_data = await Promise.all(
+        await Promise.all(
           round_details_data?.players_ids?.map(async (value) => {
             if (
               value.toString() != findMatch.current_round_judge_id.toString()

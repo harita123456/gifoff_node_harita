@@ -80,17 +80,21 @@ module.exports = {
           })
           .count();
 
-        if (findLastMsg) {
-          if (findLastMsg.message_type == "text") {
-            var last_message = findLastMsg.message;
+          let last_message;
+          let last_message_time;
+          
+          if (findLastMsg) {
+            if (findLastMsg.message_type == "text") {
+              last_message = findLastMsg.message;
+            } else {
+              last_message = "media";
+            }
+            last_message_time = findLastMsg.message_time;
           } else {
-            var last_message = "media";
+            last_message = null;
+            last_message_time = null;
           }
-          var last_message_time = findLastMsg.message_time;
-        } else {
-          var last_message = null;
-          var last_message_time = null;
-        }
+          
 
         if (value.user_id == user_id) {
           var other_user = value.other_user_id;
