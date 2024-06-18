@@ -286,6 +286,8 @@ module.exports = {
             select: "name profile_picture profile_url is_block membership_type",
           });
 
+          let result_array;
+
         if (find_win_draw.length > 1) {
           // here - manage futher process or event if needed to send server
 
@@ -296,14 +298,13 @@ module.exports = {
             }
           });
 
-          var result_array = find_win_draw;
+          result_array = find_win_draw;
         } else {
           if (find_win.user_id?.profile_picture) {
             find_win.user_id.profile_picture =
               process.env.BASE_URL + find_win.user_id?.profile_picture;
           }
 
-          var result_array = [];
           result_array.push(find_win);
         }
 
@@ -545,8 +546,10 @@ module.exports = {
               players_ids: user_id,
             });
 
+            let updateMatch;
+
             if (!checkPlayers) {
-              var updateMatch = await games
+              updateMatch = await games
                 .findByIdAndUpdate(
                   game_id,
                   {
@@ -560,7 +563,7 @@ module.exports = {
                     "name profile_picture profile_url is_block membership_type",
                 });
             } else {
-              var updateMatch = await games
+              updateMatch = await games
                 .findById(game_id)
                 .where({ is_deleted: false, players_ids: user_id })
                 .populate({
@@ -3220,6 +3223,8 @@ module.exports = {
             })
             .session(session);
 
+          let result_array;
+
           if (find_win_draw.length > 1) {
             // Additional logic for handling draw users if needed
 
@@ -3230,14 +3235,14 @@ module.exports = {
               }
             });
 
-            var result_array = find_win_draw;
+            result_array = find_win_draw;
           } else {
             if (find_win.user_id?.profile_picture) {
               find_win.user_id.profile_picture =
                 process.env.BASE_URL + find_win.user_id?.profile_picture;
             }
 
-            var result_array = [find_win];
+            result_array = [find_win];
           }
 
           // Commit the transaction
