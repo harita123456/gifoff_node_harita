@@ -146,7 +146,7 @@ const deleteClues = async (req, res) => {
 
         existingClue.is_deleted = true;
 
-        const deletedClue = await existingClue.save();
+        await existingClue.save();
 
         return successRes(res, "Clue deleted successfully",);
     } catch (error) {

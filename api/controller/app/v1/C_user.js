@@ -44,7 +44,6 @@ const signup = async (req, res) => {
       device_token,
       device_type,
     } = req.body;
-    const currentDateTime = await dateTime();
     let find_email = await users.findOne({
       email_address: email_address,
       is_deleted: false,

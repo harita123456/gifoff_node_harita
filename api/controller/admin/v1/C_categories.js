@@ -214,7 +214,7 @@ const deleteCategories = async (req, res) => {
 
     existingCategory.is_deleted = true;
 
-    const deletedCategory = await existingCategory.save();
+    await existingCategory.save();
 
     return successRes(res, "Category deleted successfully");
   } catch (error) {
