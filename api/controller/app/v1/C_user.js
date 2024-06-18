@@ -286,7 +286,7 @@ const signIn = async (req, res) => {
         $set: {
           device_token: device_token,
           device_type: device_type,
-          user_id: user_data._id,
+          user_id: user_data?._id,
           auth_token: token,
         },
       },
