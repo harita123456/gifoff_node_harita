@@ -87,11 +87,13 @@ const searchUserList = async (req, res) => {
               friend_id: user._id,
             });
 
+            let is_requested;
+
             if (find_request) {
-              var is_requested = true;
+              is_requested = true;
               var request_id = find_request._id;
             } else {
-              var is_requested = false;
+              is_requested = false;
               var request_id = null;
             }
 
@@ -102,11 +104,13 @@ const searchUserList = async (req, res) => {
               friend_id: user_id,
             });
 
+            let is_other_requested;
+
             if (other_friend_request) {
-              var is_other_requested = true;
+              is_other_requested = true;
               var request_id = other_friend_request._id;
             } else {
-              var is_other_requested = false;
+              is_other_requested = false;
               var request_id = null;
             }
 
@@ -347,7 +351,7 @@ const sendfriendRequest = async (req, res) => {
       is_deleted: false,
     });
 
-    var device_token_array = [];
+    let device_token_array = [];
     for (var value of find_token) {
       var device_token = value.device_token;
       device_token_array.push(device_token);
@@ -390,7 +394,7 @@ const acceptDeclinefrinedRequest = async (req, res) => {
     }
 
     if (request_status == "accepted") {
-      var update_request = await request.findByIdAndUpdate(
+      let update_request = await request.findByIdAndUpdate(
         {
           _id: request_id,
           request_status: "sent",
@@ -446,8 +450,7 @@ const acceptDeclinefrinedRequest = async (req, res) => {
 
         var device_token_array = [];
         for (var value of find_token) {
-          var device_token = value.device_token;
-          device_token_array.push(device_token);
+          device_token_array.push(value.device_token);
         }
 
         if (device_token_array.length > 0) {
@@ -464,7 +467,7 @@ const acceptDeclinefrinedRequest = async (req, res) => {
     }
 
     if (request_status == "decline") {
-      var update_request = await request.findByIdAndUpdate(
+      let update_request = await request.findByIdAndUpdate(
         {
           _id: request_id,
           request_status: "sent",
@@ -545,12 +548,14 @@ const cancelfriendRequest = async (req, res) => {
       return errorRes(res, `Couldn't found login user`);
     }
 
+    let find_request;
+
     if (request_id) {
-      var find_request = await request.findById(request_id).where({
+      find_request = await request.findById(request_id).where({
         is_deleted: false,
       });
     } else {
-      var find_request = await request.findOne().where({
+      find_request = await request.findOne().where({
         user_id: login_user_id,
         friend_id: user_id,
         request_status: "sent",
@@ -562,7 +567,7 @@ const cancelfriendRequest = async (req, res) => {
       return errorRes(res, `Couldn't found request`);
     }
 
-    var update_request = await request.findByIdAndUpdate(
+    let update_request = await request.findByIdAndUpdate(
       find_request._id,
       {
         $set: {
