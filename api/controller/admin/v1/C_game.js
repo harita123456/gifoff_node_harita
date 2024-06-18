@@ -53,7 +53,7 @@ const gameList = async (req, res) => {
             select: "name profile_picture profile_url is_block",
           });
         const update = {
-          ...data.toObject(),
+          ...data?.toObject(),
           leaderboard_data: find_leaderboard,
         };
         return update;
@@ -222,7 +222,7 @@ const usergameList = async (req, res) => {
             select: "name profile_picture profile_url is_block",
           });
         const update = {
-          ...data.toObject(),
+          ...data?.toObject(),
           leaderboard_data: find_leaderboard,
         };
 
