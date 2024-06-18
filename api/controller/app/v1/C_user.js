@@ -13,7 +13,7 @@ const { userToken } = require("../../../../utils/token");
 const {
   successRes,
   errorRes,
-  multiSuccessRes,
+  // multiSuccessRes,
 } = require("../../../../utils/common_fun");
 const { sendOtpCode, sendSupportMail } = require("../../../../utils/send_mail");
 const fs = require("fs");
@@ -24,10 +24,10 @@ const {
   comparePassword,
 } = require("../../../../utils/secure_pwd");
 
-const {
-  notificationSend,
-  notiSendMultipleDevice,
-} = require("../../../../utils/notification_send");
+// const {
+//   notificationSend,
+//   notiSendMultipleDevice,
+// } = require("../../../../utils/notification_send");
 // const { ObjectId } = require("mongodb");
 const { dateTime } = require("../../../../utils/date_time");
 

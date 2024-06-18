@@ -1,6 +1,5 @@
 const app_versions = require("../../../models/M_app_version");
 const users = require("../../../models/M_user");
-const user_session = require("../../../models/M_user_session");
 const request = require("../../../models/M_request");
 
 //user is now pending

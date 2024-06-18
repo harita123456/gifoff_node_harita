@@ -1,6 +1,5 @@
 const users = require("../../../models/M_user");
 const user_session = require("../../../models/M_user_session");
-const categories = require("../../../models/M_categories");
 // const clues = require("../../../models/M_clues");
 const friends = require("../../../models/M_friends");
 const request = require("../../../models/M_request");
@@ -13,16 +12,13 @@ const {
   multiSuccessRes,
 } = require("../../../../utils/common_fun");
 
-const fs = require("fs");
-const path = require("path");
-const outputPath = path.join(__dirname, "../../../../");
+// const path = require("path");
 
 const {
   // notificationSend,
   notiSendMultipleDevice,
 } = require("../../../../utils/notification_send");
-const { ObjectId } = require("mongodb");
-const { dateTime } = require("../../../../utils/date_time");
+
 
 const searchUserList = async (req, res) => {
   try {

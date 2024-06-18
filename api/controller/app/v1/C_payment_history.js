@@ -9,16 +9,16 @@ const {
   // multiSuccessRes,
 } = require("../../../../utils/common_fun");
 
-const fs = require("fs");
-const path = require("path");
-const outputPath = path.join(__dirname, "../../../../");
+// const fs = require("fs");
+// const path = require("path");
+// const outputPath = path.join(__dirname, "../../../../");
 
-const {
-  // notificationSend,
-  notiSendMultipleDevice,
-} = require("../../../../utils/notification_send");
-const { ObjectId } = require("mongodb");
-const { dateTime } = require("../../../../utils/date_time");
+// const {
+//   // notificationSend,
+//   notiSendMultipleDevice,
+// } = require("../../../../utils/notification_send");
+// const { ObjectId } = require("mongodb");
+// const { dateTime } = require("../../../../utils/date_time");
 
 const addMembership = async (req, res) => {
   try {
