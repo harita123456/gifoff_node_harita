@@ -88,13 +88,14 @@ const searchUserList = async (req, res) => {
             });
 
             let is_requested;
+            let request_id;
 
             if (find_request) {
               is_requested = true;
-              var request_id = find_request._id;
+              request_id = find_request._id;
             } else {
               is_requested = false;
-              var request_id = null;
+              request_id = null;
             }
 
             let other_friend_request = await request.findOne().where({
@@ -108,10 +109,10 @@ const searchUserList = async (req, res) => {
 
             if (other_friend_request) {
               is_other_requested = true;
-              var request_id = other_friend_request._id;
+              request_id = other_friend_request._id;
             } else {
               is_other_requested = false;
-              var request_id = null;
+              request_id = null;
             }
 
             user = {
@@ -422,7 +423,7 @@ const acceptDeclinefrinedRequest = async (req, res) => {
         .findById(update_request?.friend_id)
         .where({ is_deleted: false });
 
-      var friend_user_profile_picture;
+      let friend_user_profile_picture;
       if (find_friend_id.profile_url != null) {
         friend_user_profile_picture = find_friend_id?.profile_url;
       } else {
@@ -443,13 +444,13 @@ const acceptDeclinefrinedRequest = async (req, res) => {
           id: find_friend_id?._id,
         };
 
-        var find_token = await user_session.find({
+        let find_token = await user_session.find({
           user_id: find_user_id?._id,
           is_deleted: false,
         });
 
-        var device_token_array = [];
-        for (var value of find_token) {
+        let device_token_array = [];
+        for (let value of find_token) {
           device_token_array.push(value.device_token);
         }
 
@@ -490,7 +491,7 @@ const acceptDeclinefrinedRequest = async (req, res) => {
         .findById(update_request?.friend_id)
         .where({ is_deleted: false });
 
-      var friend_user_profile_picture;
+      let friend_user_profile_picture;
       if (find_friend_id.profile_url != null) {
         friend_user_profile_picture = find_friend_id?.profile_url;
       } else {
@@ -510,13 +511,13 @@ const acceptDeclinefrinedRequest = async (req, res) => {
         id: find_friend_id?._id,
       };
 
-      var find_token = await user_session.find({
+      let find_token = await user_session.find({
         user_id: find_user_id?._id,
         is_deleted: false,
       });
 
-      var device_token_array = [];
-      for (var value of find_token) {
+      let device_token_array = [];
+      for (let value of find_token) {
         var device_token = value.device_token;
         device_token_array.push(device_token);
       }
