@@ -48,10 +48,10 @@ const appVersionCheck = async (req, res) => {
       is_deleted: false,
     });
 
-    var data = {
-      device_type: app_platform,
-      device_token: device_token,
-    };
+    // var data = {
+    //   device_type: app_platform,
+    //   device_token: device_token,
+    // };
 
     if (user_id) {
       // data = { ...data, user_id: user_id };
