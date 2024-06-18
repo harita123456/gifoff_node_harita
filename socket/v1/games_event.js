@@ -372,7 +372,7 @@ module.exports = {
 
     if (
       findMatch?.players_ids.length == findMatch?.players &&
-      !findMatch.players_ids.includes(user_id)
+      !findMatch?.players_ids.includes(user_id)
     ) {
       // If maximum players reached, abort transaction
       await session.abortTransaction();
