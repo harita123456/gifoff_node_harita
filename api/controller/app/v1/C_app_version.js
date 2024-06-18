@@ -54,7 +54,7 @@ const appVersionCheck = async (req, res) => {
     };
 
     if (user_id) {
-      data = { ...data, user_id: user_id };
+      // data = { ...data, user_id: user_id };
 
       var find_user = await users.findById(user_id);
 
