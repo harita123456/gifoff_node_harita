@@ -3,7 +3,7 @@ const multipart = require("connect-multiparty");
 const multipartMiddleware = multipart();
 
 const userAuth = require("../../../middlewares/auth");
-const validateRequest = require("../../../middlewares/validation");
+// const validateRequest = require("../../../middlewares/validation");
 const {
     addCategories,
     editCategories,
@@ -13,7 +13,7 @@ const {
 } = require("../../../controller/admin/v1/C_categories");
 
 const {
-    adminSignUpInDto,
+    // adminSignUpInDto,
 } = require("../../../dto/admin/v1/admin_dto");
 
 router.post(

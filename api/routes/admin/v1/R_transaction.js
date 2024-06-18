@@ -3,7 +3,7 @@ const multipart = require("connect-multiparty");
 const multipartMiddleware = multipart();
 
 const userAuth = require("../../../middlewares/auth");
-const validateRequest = require("../../../middlewares/validation");
+// const validateRequest = require("../../../middlewares/validation");
 const {
   transactionList,
 } = require("../../../controller/admin/v1/C_transaction");
