@@ -81,8 +81,8 @@ module.exports = {
       let noti_title = "Game play invitation";
       let noti_for = "game_invitation";
       let noti_image = get_user?.profile_picture
-        ? process.env.BASE_URL + get_user.profile_picture
-        : get_user.profile_url;
+        ? process.env.BASE_URL + get_user?.profile_picture
+        : get_user?.profile_url;
 
       let notiData = {
         noti_image,
@@ -371,7 +371,7 @@ module.exports = {
       .exec();
 
     if (
-      findMatch.players_ids.length == findMatch.players &&
+      findMatch?.players_ids.length == findMatch?.players &&
       !findMatch.players_ids.includes(user_id)
     ) {
       // If maximum players reached, abort transaction
@@ -1009,7 +1009,7 @@ module.exports = {
           }
         }
 
-        get_submit_gif = { ...get_submit_gif._doc, is_all_submitted };
+        get_submit_gif = { ...get_submit_gif?._doc, is_all_submitted };
 
         let res_data = await socketSuccessRes(
           "GIF submitted successfully",
@@ -2166,7 +2166,7 @@ module.exports = {
 
           // for rejoin manage
 
-          if (findMatch.rounds <= get_data.round) {
+          if (findMatch.rounds <= get_data?.round) {
             await round_details.findByIdAndUpdate(findMatch.current_round_id, {
               $set: { round_status: "game_winner_selected" },
             });
