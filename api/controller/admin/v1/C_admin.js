@@ -1,7 +1,7 @@
 const {
   successRes,
   errorRes,
-  multiSuccessRes,
+  // multiSuccessRes,
 } = require("../../../../utils/common_fun");
 const users = require("../../../models/M_user");
 const user_session = require("../../../models/M_user_session");
@@ -12,20 +12,20 @@ const {
   comparePassword,
 } = require("../../../../utils/secure_pwd");
 
-const {
-  notificationSend,
-  notiSendMultipleDevice,
-} = require("../../../../utils/notification_send");
+// const {
+//   notificationSend,
+//   notiSendMultipleDevice,
+// } = require("../../../../utils/notification_send");
 
-const { dateTime } = require("../../../../utils/date_time");
+// const { dateTime } = require("../../../../utils/date_time");
 const { sendOtpCode } = require("../../../../utils/send_mail");
 const { userToken } = require("../../../../utils/token");
 
-const fs = require("fs");
+// const fs = require("fs");
 var nodemailer = require("nodemailer");
-const mongoose = require("mongoose");
-const moment = require("moment-timezone");
-const ObjectId = require("mongodb").ObjectId;
+// const mongoose = require("mongoose");
+// const moment = require("moment-timezone");
+// const ObjectId = require("mongodb").ObjectId;
 
 const adminSignUp = async (req, res) => {
   try {
