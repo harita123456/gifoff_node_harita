@@ -163,7 +163,7 @@ const signIn = async (req, res) => {
           );
         }
 
-        var token = await userToken(find_user);
+        let token = await userToken(find_user);
 
         var update_data;
 
@@ -257,7 +257,7 @@ const signIn = async (req, res) => {
         );
       }
 
-      var token = await userToken(find_user);
+      let token = await userToken(find_user);
 
       let update_data = {
         is_login: true,
@@ -488,10 +488,11 @@ const deleteAccount = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
+    let user_id;
     if (!req.body.user_id) {
-      var user_id = req.user._id;
+      user_id = req.user._id;
     } else {
-      var user_id = req.body.user_id;
+      user_id = req.body.user_id;
     }
 
     var find_data = await users.findById({ _id: user_id }).where({
@@ -526,10 +527,11 @@ const logout = async (req, res) => {
 
 const getProfile = async (req, res) => {
   try {
+    let user_id;
     if (!req.body.user_id) {
-      var user_id = req.user._id;
+      user_id = req.user._id;
     } else {
-      var user_id = req.body.user_id;
+      user_id = req.body.user_id;
     }
 
     var find_user = await users
@@ -585,12 +587,13 @@ const getProfile = async (req, res) => {
           friend_id: user_id,
         });
 
+          let is_requested,request_id;
         if (find_request) {
-          var is_requested = true;
-          var request_id = find_request._id;
+          is_requested = true;
+          request_id = find_request._id;
         } else {
-          var is_requested = false;
-          var request_id = null;
+          is_requested = false;
+          request_id = null;
         }
 
         find_user = {
@@ -611,10 +614,11 @@ const getProfile = async (req, res) => {
 
 const editProfile = async (req, res) => {
   try {
+    let user_id;
     if (!req.body.user_id) {
-      var user_id = req.user._id;
+      user_id = req.user._id;
     } else {
-      var user_id = req.body.user_id;
+      user_id = req.body.user_id;
     }
     var { name, dob, bio } = req.body;
     var { profile_picture } = req.files;
