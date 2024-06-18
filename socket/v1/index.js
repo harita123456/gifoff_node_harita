@@ -18,7 +18,7 @@ const {
   chatSuggestionList,
   privatematchList,
   joinPublicMatch,
-  disconnect
+  disconnect,
 } = require("./games_event");
 
 const users = require("../../api/models/M_user");
@@ -31,52 +31,43 @@ module.exports = function (io) {
   v1version.on("connection", (socket) => {
     console.log("Socket connected  v1.....", socket.id);
 
-
-
     socket.on("disconnect", async (data) => {
-
-
       try {
         var socket_data = socket.id;
 
-        data =
-        {
+        data = {
           ...data,
-          socket_data: socket_data
-        }
+          socket_data: socket_data,
+        };
         var disconnect_game = await disconnect(data);
 
         if (disconnect_game != null) {
-
           let exit_game = await exitGame(disconnect_game);
-
-
-
-
-
 
           if (disconnect_game.rematch_game_id) {
             socket.join(disconnect_game.rematch_game_id);
 
-            v1version.to(disconnect_game.rematch_game_id.toString()).emit("exitGame", exit_game);
+            v1version
+              .to(disconnect_game.rematch_game_id.toString())
+              .emit("exitGame", exit_game);
 
             socket.leave(disconnect_game.rematch_game_id.toString());
           } else {
             socket.join(disconnect_game.game_id);
 
-
-            v1version.to(disconnect_game.game_id.toString()).emit("exitGame", exit_game);
+            v1version
+              .to(disconnect_game.game_id.toString())
+              .emit("exitGame", exit_game);
 
             socket.leave(disconnect_game.game_id.toString());
           }
         }
-
       } catch (error) {
-        console.log("=== exitGame ===", error);
+        console.log("ERROR === exitGame ===", error);
         let res_data = await socketErrorRes("Something went wrong!");
         socket.emit("exitGame", res_data);
       }
-    })
+    });
 
     /*  PAYLOAD --> 
       {
@@ -183,11 +174,10 @@ module.exports = function (io) {
         console.log("joinMatch on============= ", data);
         // // var data = JSON.parse(data);
         var socket_data = socket.id;
-        data =
-        {
+        data = {
           ...data,
-          socket_data
-        }
+          socket_data,
+        };
         let join_match = await joinMatch(data);
 
         console.log("joinMatch emit  ============= ", join_match);
@@ -205,7 +195,7 @@ module.exports = function (io) {
         let match_list = await matchList(data);
 
         let res_data = await socketSuccessRes(
-          "Match list get sucessfully",
+          "Match list get successfully",
           match_list
         );
         v1version.emit("matchList", res_data);
@@ -615,9 +605,8 @@ module.exports = function (io) {
     */
     socket.on("switchRound", async (data) => {
       try {
-        console.log(" switchRound  on ::  ", data);
-        // var data = JSON.parse(data);
-        var switch_round = await switchRound(data);
+        console.log("switchRound on :: ", data);
+        const switch_round = await switchRound(data);
 
         if (switch_round != null) {
           if (data.rematch_game_id) {
@@ -631,13 +620,10 @@ module.exports = function (io) {
           }
         }
 
-        console.log("switchRound  --  emit -->>>> ", switch_round);
-
-        // socket.emit("findRoomOn", resData);
+        console.log("switchRound -- emit -->>>> ", switch_round);
       } catch (error) {
         console.log("=== switchRound ===", error);
-        let res_data = await socketErrorRes("Something went wrong!");
-
+        const res_data = await socketErrorRes("Something went wrong!");
         socket.emit("switchRound", res_data);
       }
     });
@@ -656,8 +642,10 @@ module.exports = function (io) {
         // // var data = JSON.parse(data);
         let join_match = await exitGame(data);
 
-
-        console.log("exit game from exit game -----------------------+-", join_match)
+        console.log(
+          "exit game from exit game -----------------------+-",
+          join_match
+        );
 
         if (data.rematch_game_id) {
           socket.join(data.rematch_game_id);

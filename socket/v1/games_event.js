@@ -26,6 +26,8 @@ const path = require("path");
 const { log } = require("console");
 const outputPath = path.join(__dirname, "../../");
 
+const gameLocks = {};
+
 // const { sFindSessionData } = require("../../api/v1/user/service");
 
 module.exports = {
@@ -217,11 +219,13 @@ module.exports = {
     if (findMatch) {
       findMatch.players_ids.map(async (value) => {
         if (value.profile_picture) {
-          value.profile_picture = process.env.BASE_URL + value.profile_picture;
+          value.profile_picture = value.profile_picture
+            ? process.env.BASE_URL + value.profile_picture
+            : value.profile_url;
         }
       });
 
-      // attach clue deails for rejoin users
+      // attach clue details for rejoin users
       let find_clue = await clues
         .findById(findMatch.current_round_id?.clue_id)
         .populate({
@@ -236,7 +240,7 @@ module.exports = {
 
       findMatch = { ...findMatch._doc, clue_details: find_clue };
 
-      // attach reveal deails for rejoin users
+      // attach reveal details for rejoin users
 
       let get_data = await round_submission
         .find({
@@ -426,118 +430,193 @@ module.exports = {
     session.endSession();
 
     if (findMatch) {
-      if (findPlayerInMatch) {
-        findPlayerInMatch.players_ids.map(async (value) => {
-          if (value.profile_picture) {
-            value.profile_picture =
-              process.env.BASE_URL + value.profile_picture;
-          }
-        });
-
-        var res_data = await socketSuccessRes(
-          "You already joined this game",
-          findPlayerInMatch
-        );
-        return res_data;
-      } else if (findExistingPlayerInMatch) {
-        // when existing player join the game again after exit game
-
-        // add member in current round here oko
-
-        let round_details_data_check = await round_details
-          .findById(findExistingPlayerInMatch.current_round_id?._id)
-          .where({ players_ids: user_id });
-
-        if (!round_details_data_check) {
-          await round_details.findByIdAndUpdate(
-            findExistingPlayerInMatch.current_round_id?._id,
-            {
-              $push: { players_ids: user_id },
-            }
-          );
-        }
-
-        var findExistingPlayerInMatchData = await games
-          .findById(game_id)
-          .where({
-            is_deleted: false,
-          })
-          .populate({
-            path: "players_ids",
-            select: "name profile_picture profile_url is_block membership_type",
-          })
-          .populate({
-            path: "current_round_id",
-          });
-
-        findExistingPlayerInMatchData.players_ids.map(async (value) => {
-          if (value.profile_picture) {
-            value.profile_picture =
-              process.env.BASE_URL + value.profile_picture;
-          }
-        });
-
-        var res_data = await socketSuccessRes(
-          "You are successfully joined in this game",
-          findExistingPlayerInMatchData
+      if (findMatch.game_status == "completed") {
+        var res_data = await socketErrorRes(
+          "You can't join this game because it's completed"
         );
 
         return res_data;
       } else {
-        if (findMatch.game_status == "in_progress") {
-          var res_data = await socketErrorRes(
-            "You can't join the game because it has already started"
-          );
-          return res_data;
-        } else if (findMatch.game_status == "completed") {
-          var res_data = await socketErrorRes(
-            "You can't join this game because it's completed"
-          );
-
-          return res_data;
-        } else {
-          var checkPlayers = await games.findById(game_id).where({
-            players_ids: user_id,
-          });
-
-          if (!checkPlayers) {
-            var updateMatch = await games
-              .findByIdAndUpdate(
-                game_id,
-                {
-                  $push: { players_ids: user_id },
-                },
-                { new: true }
-              )
-              .populate({
-                path: "players_ids",
-                select:
-                  "name profile_picture profile_url is_block membership_type",
-              });
-          } else {
-            var updateMatch = await games
-              .findById(game_id)
-              .where({ is_deleted: false, players_ids: user_id })
-              .populate({
-                path: "players_ids",
-                select:
-                  "name profile_picture profile_url is_block membership_type",
-              });
-          }
-
-          // console.log("updateMatch++++++++++++++++++",updateMatch)
-          updateMatch.players_ids.map(async (value) => {
+        if (findPlayerInMatch) {
+          findPlayerInMatch.players_ids.map(async (value) => {
             if (value.profile_picture) {
-              value.profile_picture =
-                process.env.BASE_URL + value.profile_picture;
+              value.profile_picture = value.profile_picture
+                ? process.env.BASE_URL + value.profile_picture
+                : value.profile_url;
             }
           });
 
           var res_data = await socketSuccessRes(
-            "You are successfully joined in this game",
-            updateMatch
+            "You already joined this game",
+            findPlayerInMatch
           );
           return res_data;
+        } else if (findExistingPlayerInMatch) {
+          if (findMatch.game_status == "completed") {
+            var res_data = await socketErrorRes(
+              "You can't join this game because it's completed"
+            );
+
+            return res_data;
+          } else {
+            // when existing player join the game again after exit game
+
+            // add member in current round here oko
+
+            let round_details_data_check = await round_details
+              .findById(findExistingPlayerInMatch.current_round_id?._id)
+              .where({ players_ids: user_id });
+
+            if (!round_details_data_check) {
+              await round_details.findByIdAndUpdate(
+                findExistingPlayerInMatch.current_round_id?._id,
+                {
+                  $push: { players_ids: user_id },
+                }
+              );
+            }
+
+            var findExistingPlayerInMatchData = await games
+              .findById(game_id)
+              .where({
+                is_deleted: false,
+              })
+              .populate({
+                path: "players_ids",
+                select:
+                  "name profile_picture profile_url is_block membership_type",
+              })
+              .populate({
+                path: "current_round_id",
+              });
+
+            findExistingPlayerInMatchData.players_ids.map(async (value) => {
+              if (value.profile_picture) {
+                value.profile_picture = value.profile_picture
+                  ? process.env.BASE_URL + value.profile_picture
+                  : value.profile_url;
+              }
+            });
+
+            // check all user submitted their res
+
+            let get_all_data = await round_submission
+              .find({
+                game_id: game_id,
+                round: findMatch.current_round,
+                is_deleted: false,
+              })
+              .countDocuments();
+
+            var is_all_submitted = false;
+
+            if (get_all_data == findMatch.players_ids.length - 1) {
+              is_all_submitted = true;
+            }
+
+            // for sudden death
+
+            if (findMatch.is_sudden_death == true) {
+              if (get_all_data == findMatch.sudden_death_players_ids.length) {
+                is_all_submitted = true;
+              }
+            }
+
+            findExistingPlayerInMatchData = {
+              ...findExistingPlayerInMatchData._doc,
+              is_all_submitted,
+            };
+
+            var res_data = await socketSuccessRes(
+              "You are successfully joined in this game",
+              findExistingPlayerInMatchData
+            );
+
+            return res_data;
+          }
+        } else {
+          if (findMatch.game_status == "in_progress") {
+            var res_data = await socketErrorRes(
+              "You can't join the game because it has already started"
+            );
+            return res_data;
+          } else if (findMatch.game_status == "completed") {
+            var res_data = await socketErrorRes(
+              "You can't join this game because it's completed"
+            );
+
+            return res_data;
+          } else {
+            var checkPlayers = await games.findById(game_id).where({
+              players_ids: user_id,
+            });
+
+            if (!checkPlayers) {
+              var updateMatch = await games
+                .findByIdAndUpdate(
+                  game_id,
+                  {
+                    $push: { players_ids: user_id },
+                  },
+                  { new: true }
+                )
+                .populate({
+                  path: "players_ids",
+                  select:
+                    "name profile_picture profile_url is_block membership_type",
+                });
+            } else {
+              var updateMatch = await games
+                .findById(game_id)
+                .where({ is_deleted: false, players_ids: user_id })
+                .populate({
+                  path: "players_ids",
+                  select:
+                    "name profile_picture profile_url is_block membership_type",
+                });
+            }
+
+            // console.log("updateMatch++++++++++++++++++",updateMatch)
+            updateMatch.players_ids.map(async (value) => {
+              if (value.profile_picture) {
+                value.profile_picture = value.profile_picture
+                  ? process.env.BASE_URL + value.profile_picture
+                  : value.profile_url;
+              }
+            });
+
+            // check all user submitted their res
+
+            let get_all_data = await round_submission
+              .find({
+                game_id: game_id,
+                round: findMatch.current_round,
+                is_deleted: false,
+              })
+              .countDocuments();
+
+            var is_all_submitted = false;
+
+            if (get_all_data == findMatch.players_ids.length - 1) {
+              is_all_submitted = true;
+            }
+
+            // for sudden death
+
+            if (findMatch.is_sudden_death == true) {
+              if (get_all_data == findMatch.sudden_death_players_ids.length) {
+                is_all_submitted = true;
+              }
+            }
+
+            updateMatch = { ...updateMatch._doc, is_all_submitted };
+
+            var res_data = await socketSuccessRes(
+              "You are successfully joined in this game",
+              updateMatch
+            );
+            return res_data;
+          }
         }
       }
     } else {
@@ -632,8 +711,9 @@ module.exports = {
 
         updateMatch.players_ids.map(async (value) => {
           if (value.profile_picture) {
-            value.profile_picture =
-              process.env.BASE_URL + value.profile_picture;
+            value.profile_picture = value.profile_picture
+              ? process.env.BASE_URL + value.profile_picture
+              : value.profile_url;
           }
 
           // create - new
@@ -845,10 +925,20 @@ module.exports = {
         if (get_data) {
           //update
 
-          await fs.unlink(`${outputPath}public/${get_data.gif_name}`, (err) => {
-            // if (err) throw err;
-            if (err) console.log(err);
-          });
+          const fileName = `${outputPath}public/${get_data.gif_name}`;
+
+          if (
+            fileName !== `${outputPath}public/gif_storage/Loser_Bright.gif` &&
+            fileName !== `${outputPath}public/gif_storage/Loser_Dark.gif` &&
+            get_data.is_url !== true
+          ) {
+            // Check if it's the file you want to keep
+            await fs.unlink(fileName, (err) => {
+              if (err) console.error(err); // Log errors for debugging
+            });
+          } else {
+            console.log(`Skipping deletion of ${fileName}`); // Optional: Log the skipped file
+          }
 
           var submit_gif = await round_submission.findByIdAndUpdate(
             get_data._id,
@@ -918,7 +1008,7 @@ module.exports = {
           is_all_submitted = true;
         }
 
-        // for suddent death
+        // for sudden death
 
         if (findMatch.is_sudden_death == true) {
           if (get_all_data == findMatch.sudden_death_players_ids.length) {
@@ -1004,6 +1094,140 @@ module.exports = {
   },
 
   revealResult: async (data) => {
+    const { game_id, round, user_id } = data;
+
+    // Check if there's already a lock for this game
+    if (gameLocks[game_id]) {
+      console.log(`Game ${game_id} is already being processed`);
+      return null;
+    }
+
+    // Set the lock
+    gameLocks[game_id] = true;
+
+    try {
+      console.log("data+++++++++++", data);
+
+      const findMatch = await games
+        .findById(game_id)
+        .where({ is_deleted: false });
+      console.log("findMatch++--++--", findMatch);
+
+      if (!findMatch) {
+        const res_data = await socketErrorRes("Game not found");
+        return res_data;
+      }
+
+      if (round != findMatch.current_round) {
+        const res_data = await socketErrorRes("The round was not found");
+        return res_data;
+      }
+
+      findMatch.is_current_round_switch = false;
+      await findMatch.save();
+
+      const round_details_data = await round_details.findOne({
+        game_id: game_id,
+        round: round,
+        is_deleted: false,
+      });
+
+      if (round_details_data?.is_reveal_result == false) {
+        await round_details.findByIdAndUpdate(
+          round_details_data._id,
+          {
+            $set: { is_reveal_result: true },
+          },
+          { new: true }
+        );
+
+        const strings = ["Loser_Bright.gif", "Loser_Dark.gif"];
+        const randomIndex = Math.floor(Math.random() * strings.length);
+        const randomString = strings[randomIndex];
+
+        const round_data = await Promise.all(
+          round_details_data?.players_ids?.map(async (value) => {
+            if (
+              value.toString() != findMatch.current_round_judge_id.toString()
+            ) {
+              if (findMatch.is_sudden_death) {
+                if (findMatch?.sudden_death_players_ids.includes(value)) {
+                  const find_round = await round_submission.findOne({
+                    game_id: game_id,
+                    round: round,
+                    user_id: value,
+                    is_deleted: false,
+                  });
+
+                  if (!find_round) {
+                    const createData = {
+                      game_id: game_id,
+                      round: round,
+                      category_id: round_details_data.category_id,
+                      clue_id: round_details_data.clue_id,
+                      user_id: value,
+                      gif_name: `gif_storage/${randomString}`,
+                    };
+                    await round_submission.create([createData]);
+                  }
+                }
+              } else {
+                const find_round = await round_submission.findOne({
+                  game_id: game_id,
+                  round: round,
+                  user_id: value,
+                  is_deleted: false,
+                });
+
+                if (!find_round) {
+                  const createData = {
+                    game_id: game_id,
+                    round: round,
+                    category_id: round_details_data.category_id,
+                    clue_id: round_details_data.clue_id,
+                    user_id: value,
+                    gif_name: `gif_storage/${randomString}`,
+                  };
+                  await round_submission.create([createData]);
+                }
+              }
+            }
+          })
+        );
+
+        const get_data = await round_submission.find({
+          game_id: game_id,
+          round: round,
+          is_deleted: false,
+        });
+        get_data.forEach((value) => {
+          if (value.is_url == false) {
+            value.gif_name = process.env.BASE_URL + value.gif_name;
+          }
+        });
+
+        const res_data = await socketSuccessRes(
+          "Result reveal successful",
+          get_data
+        );
+        return res_data;
+      } else {
+        console.log("returning null ---");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error in revealResult event:", error);
+
+      const res_data = await socketErrorRes("Something went wrong!");
+      return res_data;
+    } finally {
+      // Release the lock
+      delete gameLocks[game_id];
+    }
+  },
+
+  // before game lock
+  /*  revealResult: async (data) => {
     var { game_id, round, user_id } = data;
 
     try {
@@ -1070,6 +1294,12 @@ module.exports = {
                         is_deleted: false,
                       });
 
+                      var find_round_all = await round_submission.findOne({
+                        game_id: game_id,
+                        round: round,
+                        is_deleted: false,
+                      });
+
                       console.log("find_round in if work", find_round);
 
                       if (!find_round) {
@@ -1095,6 +1325,15 @@ module.exports = {
                     });
 
                     console.log("find_round in else work", find_round);
+
+                    var find_round_all = await round_submission.findOne({
+                      game_id: game_id,
+                      round: round,
+                      is_deleted: false,
+                    });
+
+                    console.log("find_round in if work", find_round);
+
                     if (!find_round) {
                       createData = {
                         game_id: game_id,
@@ -1125,7 +1364,7 @@ module.exports = {
             });
 
             var res_data = await socketSuccessRes(
-              "Result reveal successfull",
+              "Result reveal successful",
               get_data
             );
             return res_data;
@@ -1146,7 +1385,7 @@ module.exports = {
       let res_data = await socketErrorRes("Something went wrong!");
       return res_data;
     }
-  },
+  }, */
 
   /* revealResult: async (data) => {
     var { game_id, round, user_id } = data;
@@ -1875,13 +2114,22 @@ module.exports = {
                 });
 
                 get_gif_data.map(async (value) => {
-                  await fs.unlink(
-                    `${outputPath}public/${value.gif_name}`,
-                    (err) => {
-                      // if (err) throw err;
-                      if (err) console.log(err);
-                    }
-                  );
+                  const fileName = `${outputPath}public/${value.gif_name}`;
+
+                  if (
+                    fileName !==
+                      `${outputPath}public/gif_storage/Loser_Bright.gif` &&
+                    fileName !==
+                      `${outputPath}public/gif_storage/Loser_Dark.gif` &&
+                    value.is_url !== true
+                  ) {
+                    // Check if it's the file you want to keep
+                    await fs.unlink(fileName, (err) => {
+                      if (err) console.error(err); // Log errors for debugging
+                    });
+                  } else {
+                    console.log(`Skipping deletion of ${fileName}`); // Optional: Log the skipped file
+                  }
                 });
                 //==========
               }
@@ -2147,6 +2395,144 @@ module.exports = {
   },
 
   switchRound: async (data) => {
+    const { game_id } = data;
+
+    // Check if there's already a lock for this game
+    if (gameLocks[game_id]) {
+      console.log(`Game ${game_id} is already being processed`);
+      return null;
+    }
+
+    // Set the lock
+    gameLocks[game_id] = true;
+
+    try {
+      const findMatch = await games
+        .findById(game_id)
+        .where({ is_deleted: false })
+        .exec();
+      console.log("switchRound findMatch ", findMatch);
+
+      if (!findMatch) {
+        const res_data = await socketErrorRes("Game not found");
+        return res_data;
+      }
+
+      if (findMatch.game_status === "completed") {
+        const res_data = await socketErrorRes("The game is already completed");
+        return res_data;
+      }
+
+      if (findMatch.is_current_round_switch) {
+        return null;
+      }
+
+      findMatch.is_current_round_switch = true;
+      await findMatch.save();
+
+      let update_data = {};
+
+      const get_round_submission = await round_submission.find({
+        game_id: game_id,
+        round: findMatch.current_round,
+        is_deleted: false,
+      });
+
+      if (get_round_submission.length > 0) {
+        await round_details.findByIdAndUpdate(findMatch.current_round_id, {
+          $set: { round_status: "completed" },
+        });
+
+        update_data = {
+          ...update_data,
+          current_round: findMatch.current_round + 1,
+        };
+      }
+
+      let unselected_id;
+      if (
+        findMatch.sudden_death_players_ids?.length > 0 &&
+        findMatch.sudden_death_players_ids?.length <=
+          findMatch.players_ids.length
+      ) {
+        findMatch.sudden_death_players_ids.forEach((value) => {
+          const index = findMatch.players_ids.indexOf(value);
+          if (index !== -1) {
+            findMatch.players_ids.splice(index, 1);
+          }
+        });
+        unselected_id = findMatch.players_ids;
+      } else {
+        unselected_id = findMatch.players_ids.filter(
+          (value) => !findMatch.all_judge_ids.includes(value)
+        );
+      }
+
+      if (unselected_id.length <= 0) {
+        const findMatchData = await games.findById(game_id);
+        unselected_id =
+          findMatch.sudden_death_players_ids?.length > 0
+            ? findMatch.sudden_death_players_ids
+            : findMatchData.players_ids;
+      }
+
+      const players_count =
+        unselected_id.length === 1
+          ? unselected_id.length
+          : unselected_id.length - 1;
+      const randomNumber = Math.floor(Math.random() * players_count) + 1;
+      const selected_judge = unselected_id[randomNumber - 1];
+
+      update_data = { ...update_data, current_round_judge_id: selected_judge };
+
+      const push_data = { all_judge_ids: selected_judge };
+
+      const updateMatch = await games
+        .findByIdAndUpdate(
+          game_id,
+          {
+            $set: update_data,
+            $push: push_data,
+          },
+          { new: true }
+        )
+        .populate({
+          path: "players_ids",
+          select: "name profile_picture profile_url is_block membership_type",
+        });
+
+      updateMatch.players_ids.forEach(async (value) => {
+        if (value.profile_picture) {
+          value.profile_picture = process.env.BASE_URL + value.profile_picture;
+        }
+
+        const filter = { user_id: value._id, game_id: game_id };
+        const updateDoc = { user_id: value._id, game_id: game_id };
+
+        await leaderboard.updateOne(
+          filter,
+          { $set: updateDoc },
+          { upsert: true }
+        );
+      });
+
+      const res_data = await socketSuccessRes(
+        "Round switched successfully",
+        updateMatch
+      );
+      return res_data;
+    } catch (error) {
+      console.error("Error in switchRound event:", error);
+      const res_data = await socketErrorRes("Something went wrong!");
+      return res_data;
+    } finally {
+      // Release the lock
+      delete gameLocks[game_id];
+    }
+  },
+
+  // working before game locking
+  /* switchRound: async (data) => {
     var { game_id } = data;
 
     try {
@@ -2171,7 +2557,7 @@ module.exports = {
           return res_data;
         } else {
           // Check if the round switch is already in progress
-          if (findMatch.is_current_round_switch === true) {
+          if (findMatch.is_current_round_switch == true) {
             // If event once called, abort transaction
             // await session.abortTransaction();
             // session.endSession();
@@ -2339,7 +2725,7 @@ module.exports = {
       let res_data = await socketErrorRes("Something went wrong!");
       return res_data;
     }
-  },
+  }, */
 
   /* switchRound: async (data) => {
     var { game_id } = data;
@@ -2725,10 +3111,20 @@ module.exports = {
 
           // unlink all images
           get_gif_data.map(async (value) => {
-            await fs.unlink(`${outputPath}/public/${value.gif_name}`, (err) => {
-              // if (err) throw err;
-              if (err) console.log(err);
-            });
+            const fileName = `${outputPath}public/${value.gif_name}`;
+
+            if (
+              fileName !== `${outputPath}public/gif_storage/Loser_Bright.gif` &&
+              fileName !== `${outputPath}public/gif_storage/Loser_Dark.gif` &&
+              value.is_url !== true
+            ) {
+              // Check if it's the file you want to keep
+              await fs.unlink(fileName, (err) => {
+                if (err) console.error(err); // Log errors for debugging
+              });
+            } else {
+              console.log(`Skipping deletion of ${fileName}`); // Optional: Log the skipped file
+            }
           });
           //==========
         }
@@ -3074,8 +3470,9 @@ module.exports = {
           // Modify the player profile picture URL
           findPlayerInMatch.players_ids.map(async (value) => {
             if (value.profile_picture) {
-              value.profile_picture =
-                process.env.BASE_URL + value.profile_picture;
+              value.profile_picture = value.profile_picture
+                ? process.env.BASE_URL + value.profile_picture
+                : value.profile_url;
             }
           });
 
@@ -3109,8 +3506,9 @@ module.exports = {
           // Modify the player profile picture URL
           updateMatch.players_ids.map(async (value) => {
             if (value.profile_picture) {
-              value.profile_picture =
-                process.env.BASE_URL + value.profile_picture;
+              value.profile_picture = value.profile_picture
+                ? process.env.BASE_URL + value.profile_picture
+                : value.profile_url;
             }
           });
 
