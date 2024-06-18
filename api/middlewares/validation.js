@@ -31,8 +31,7 @@ const validateRequest = (schema) => {
 
       let errorMsg = error.details[0].message;
 
-      return errorRes(res, errorMsg);
-      return errorRes(res, "All fields are mandatory!");
+      return errorRes(res, errorMsg ? errorMsg : "All fields are mandatory!");
     }
   };
 };

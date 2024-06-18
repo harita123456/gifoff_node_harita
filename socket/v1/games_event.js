@@ -219,9 +219,7 @@ module.exports = {
     if (findMatch) {
       findMatch.players_ids.map(async (value) => {
         if (value.profile_picture) {
-          value.profile_picture = value.profile_picture
-            ? process.env.BASE_URL + value.profile_picture
-            : value.profile_url;
+          value.profile_picture = process.env.BASE_URL + value.profile_picture;
         }
       });
 
@@ -440,9 +438,7 @@ module.exports = {
         if (findPlayerInMatch) {
           findPlayerInMatch.players_ids.map(async (value) => {
             if (value.profile_picture) {
-              value.profile_picture = value.profile_picture
-                ? process.env.BASE_URL + value.profile_picture
-                : value.profile_url;
+              value.profile_picture = process.env.BASE_URL + value.profile_picturel;
             }
           });
 
@@ -492,9 +488,7 @@ module.exports = {
 
             findExistingPlayerInMatchData.players_ids.map(async (value) => {
               if (value.profile_picture) {
-                value.profile_picture = value.profile_picture
-                  ? process.env.BASE_URL + value.profile_picture
-                  : value.profile_url;
+                value.profile_picture = process.env.BASE_URL + value.profile_picture;
               }
             });
 
@@ -579,9 +573,7 @@ module.exports = {
             // console.log("updateMatch++++++++++++++++++",updateMatch)
             updateMatch.players_ids.map(async (value) => {
               if (value.profile_picture) {
-                value.profile_picture = value.profile_picture
-                  ? process.env.BASE_URL + value.profile_picture
-                  : value.profile_url;
+                value.profile_picture = process.env.BASE_URL + value.profile_picture;
               }
             });
 
@@ -3470,9 +3462,7 @@ module.exports = {
           // Modify the player profile picture URL
           findPlayerInMatch.players_ids.map(async (value) => {
             if (value.profile_picture) {
-              value.profile_picture = value.profile_picture
-                ? process.env.BASE_URL + value.profile_picture
-                : value.profile_url;
+              value.profile_picture = process.env.BASE_URL + value.profile_picture;
             }
           });
 
@@ -3506,9 +3496,7 @@ module.exports = {
           // Modify the player profile picture URL
           updateMatch.players_ids.map(async (value) => {
             if (value.profile_picture) {
-              value.profile_picture = value.profile_picture
-                ? process.env.BASE_URL + value.profile_picture
-                : value.profile_url;
+              value.profile_picture = process.env.BASE_URL + value.profile_picture;
             }
           });
 
