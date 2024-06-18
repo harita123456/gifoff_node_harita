@@ -80,7 +80,7 @@ module.exports = {
         get_user?.name + " has sent an game invitation to you for " + game_name;
       let noti_title = "Game play invitation";
       let noti_for = "game_invitation";
-      let noti_image = get_user.profile_picture
+      let noti_image = get_user?.profile_picture
         ? process.env.BASE_URL + get_user.profile_picture
         : get_user.profile_url;
 
@@ -798,7 +798,7 @@ module.exports = {
             game_id: game_id,
             judge_id: findMatch.current_round_judge_id,
             category_id: category_id,
-            clue_id: find_clue._id,
+            clue_id: find_clue?._id,
             round: findMatch.current_round,
             players_ids: findMatch.players_ids,
             round_status: "in_progress",
@@ -853,7 +853,7 @@ module.exports = {
               game_id: game_id,
               judge_id: findMatch.current_round_judge_id,
               category_id: category_id,
-              clue_id: find_clue._id,
+              clue_id: find_clue?._id,
               round: findMatch.current_round,
               players_ids: findMatch.players_ids,
               round_status: "in_progress",
@@ -1040,7 +1040,7 @@ module.exports = {
         process.env.BASE_URL + find_user.profile_picture;
     }
     var receiver_array = [];
-    findMatch.players_ids?.map((data) => {
+    findMatch?.players_ids?.map((data) => {
       if (data && !data.equals(user_id)) {
         receiver_array.push(data);
       }
@@ -1141,9 +1141,9 @@ module.exports = {
         await Promise.all(
           round_details_data?.players_ids?.map(async (value) => {
             if (
-              value.toString() != findMatch.current_round_judge_id.toString()
+              value.toString() != findMatch?.current_round_judge_id.toString()
             ) {
-              if (findMatch.is_sudden_death) {
+              if (findMatch?.is_sudden_death) {
                 if (findMatch?.sudden_death_players_ids.includes(value)) {
                   const find_round = await round_submission.findOne({
                     game_id: game_id,
@@ -1970,7 +1970,7 @@ module.exports = {
 
         console.log("-->>>>", findMatch.exit_players_ids);
         console.log(
-          findMatch.exit_players_ids.includes(findMatch.current_round_judge_id)
+          findMatch.exit_players_ids?.includes(findMatch.current_round_judge_id)
         );
 
         console.log("iam --", round_submission_id);
@@ -2039,7 +2039,7 @@ module.exports = {
           }
 
           await leaderboard.findOneAndUpdate(
-            { user_id: get_data.user_id, game_id: game_id },
+            { user_id: get_data?.user_id, game_id: game_id },
             {
               $inc: {
                 win_count: 1,
