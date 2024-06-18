@@ -424,7 +424,7 @@ const acceptDeclinefrinedRequest = async (req, res) => {
         .where({ is_deleted: false });
 
       let friend_user_profile_picture;
-      if (find_friend_id.profile_url != null) {
+      if (find_friend_id?.profile_url != null) {
         friend_user_profile_picture = find_friend_id?.profile_url;
       } else {
         friend_user_profile_picture =
@@ -492,7 +492,7 @@ const acceptDeclinefrinedRequest = async (req, res) => {
         .where({ is_deleted: false });
 
       let friend_user_profile_picture;
-      if (find_friend_id.profile_url != null) {
+      if (find_friend_id?.profile_url != null) {
         friend_user_profile_picture = find_friend_id?.profile_url;
       } else {
         friend_user_profile_picture =
@@ -627,7 +627,7 @@ const requestsList = async (req, res) => {
       request_status: { $in: ["sent"] },
     });
 
-    if (find_requests.length > 0) {
+    if (find_requests?.length > 0) {
       find_requests?.forEach((user) => {
         if (
           user?.user_id?.profile_picture &&
