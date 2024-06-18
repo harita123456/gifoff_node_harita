@@ -703,9 +703,7 @@ module.exports = {
 
         updateMatch.players_ids.map(async (value) => {
           if (value.profile_picture) {
-            value.profile_picture = value.profile_picture
-              ? process.env.BASE_URL + value.profile_picture
-              : value.profile_url;
+            value.profile_picture = process.env.BASE_URL + value.profile_picture;
           }
 
           // create - new
