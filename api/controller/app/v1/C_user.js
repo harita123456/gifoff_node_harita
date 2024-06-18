@@ -280,7 +280,7 @@ const signIn = async (req, res) => {
     await user_session.findOneAndUpdate(
       {
         device_token: device_token,
-        user_id: user_data._id,
+        user_id: user_data?._id,
       },
       {
         $set: {
