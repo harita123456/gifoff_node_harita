@@ -1,32 +1,27 @@
 const {
   successRes,
   errorRes,
-  multiSuccessRes,
+  // multiSuccessRes,
 } = require("../../../../utils/common_fun");
 const categories = require("../../../models/M_categories");
-const clues = require("../../../models/M_clues");
+// const clues = require("../../../models/M_clues");
 
-const {
-  securePassword,
-  comparePassword,
-} = require("../../../../utils/secure_pwd");
+// const {
+//   securePassword,
+//   comparePassword,
+// } = require("../../../../utils/secure_pwd");
 
-const {
-  notificationSend,
-  notiSendMultipleDevice,
-} = require("../../../../utils/notification_send");
+// const {
+//   notificationSend,
+//   notiSendMultipleDevice,
+// } = require("../../../../utils/notification_send");
 
-const { dateTime } = require("../../../../utils/date_time");
-const { sendOtpCode } = require("../../../../utils/send_mail");
-const { userToken } = require("../../../../utils/token");
+
 
 const fs = require("fs");
 const path = require("path");
 const outputPath = path.join(__dirname, "../../../../");
-var nodemailer = require("nodemailer");
-const mongoose = require("mongoose");
-const moment = require("moment-timezone");
-const ObjectId = require("mongodb").ObjectId;
+
 
 const addCategories = async (req, res) => {
   try {
