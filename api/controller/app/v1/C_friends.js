@@ -185,11 +185,11 @@ const unFriend = async (req, res) => {
       if (!find_friend) {
         return errorRes(res, "Friend not found");
       }
-      let un_friend = await friends.findByIdAndUpdate(friend_id, {
+      await friends.findByIdAndUpdate(friend_id, {
         $set: { is_deleted: true },
       });
     } else {
-      let get_friend = await friends.find().where({
+        await friends.find().where({
         is_deleted: false,
         user_id: login_user_id,
         friend_id: user_id,
@@ -356,7 +356,7 @@ const sendfriendRequest = async (req, res) => {
     }
     if (device_token_array.length > 0) {
       notiData = { ...notiData, device_token: device_token_array };
-      var noti_send = await notiSendMultipleDevice(notiData);
+      await notiSendMultipleDevice(notiData);
     }
     return successRes(
       res,
@@ -454,7 +454,7 @@ const acceptDeclinefrinedRequest = async (req, res) => {
 
         if (device_token_array.length > 0) {
           notiData = { ...notiData, device_token: device_token_array };
-          var noti_send = await notiSendMultipleDevice(notiData);
+          await notiSendMultipleDevice(notiData);
         }
 
         return successRes(
@@ -522,7 +522,7 @@ const acceptDeclinefrinedRequest = async (req, res) => {
 
       if (device_token_array.length > 0) {
         notiData = { ...notiData, device_token: device_token_array };
-        var noti_send = await notiSendMultipleDevice(notiData);
+        await notiSendMultipleDevice(notiData);
       }
       return successRes(res, "Friend request decline successfully", []);
     }

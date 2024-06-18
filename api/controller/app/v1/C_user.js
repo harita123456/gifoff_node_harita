@@ -95,7 +95,7 @@ const signup = async (req, res) => {
 
     var token = await userToken(create_user);
 
-    let session = await user_session.findOneAndUpdate(
+    await user_session.findOneAndUpdate(
       {
         device_token: device_token,
         user_id: create_user._id,
@@ -279,7 +279,7 @@ const signIn = async (req, res) => {
 
       delete user_data.password;
     }
-    let session = await user_session.findOneAndUpdate(
+    await user_session.findOneAndUpdate(
       {
         device_token: device_token,
         user_id: user_data._id,
@@ -794,7 +794,7 @@ const uploadGIF = async (req, res) => {
 const contactSupport = async (req, res) => {
   try {
     var { subject, message } = req.body;
-    var user_id = req.user._id;
+    // var user_id = req.user._id;
     var user_name = req.user.name;
     var email_address = req.user.email_address;
 

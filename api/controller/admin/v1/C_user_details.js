@@ -149,7 +149,7 @@ const deleteUser = async (req, res) => {
         return errorRes(res, "Could't found user");
       }
 
-      var update_user = await users.findByIdAndUpdate(
+      await users.findByIdAndUpdate(
         { _id: user_id },
         { $set: { is_deleted: true } },
         {

@@ -69,7 +69,7 @@ const adminSignUp = async (req, res) => {
 
     update_user.token = token;
 
-    let session = await user_session.findOneAndUpdate(
+    await user_session.findOneAndUpdate(
       {
         device_token: device_token,
         user_id: create_admin._id,
@@ -135,7 +135,7 @@ const adminLogin = async (req, res) => {
     find_admin.token = token;
 
     delete find_admin.password;
-    let session = await user_session.findOneAndUpdate(
+    await user_session.findOneAndUpdate(
       {
         device_token: device_token,
         user_id: find_admin._id,
@@ -201,7 +201,7 @@ const email_testing = async (req, res) => {
   try {
     let { email_address, html } = req.body;
 
-    let otp = Math.floor(1000 + Math.random() * 9000);
+    // let otp = Math.floor(1000 + Math.random() * 9000);
 
     console.log("email_address ======= ", email_address);
 

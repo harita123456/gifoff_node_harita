@@ -200,7 +200,7 @@ module.exports = {
         var device_token = find_device_token.device_token;
         if (device_token != null) {
           notiData = { ...notiData, device_token: device_token };
-          var noti_send = await notificationSend(notiData);
+          await notificationSend(notiData);
         }
       }
     }
@@ -266,7 +266,7 @@ module.exports = {
   unreadMessageUpdate: async (data) => {
     let { chat_room_id, user_id } = data;
 
-    let chatUpdate = await chat.updateMany(
+    await chat.updateMany(
       { chat_room_id: chat_room_id, receiver_id: user_id },
       { $set: { is_read: true } },
       { new: true }

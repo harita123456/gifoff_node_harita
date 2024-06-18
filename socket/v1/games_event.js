@@ -118,7 +118,7 @@ module.exports = {
   },
 
   matchList: async (data) => {
-    var { user_id, game_type } = data;
+    var { user_id } = data;
 
     let where_cond = {
       is_deleted: false,
@@ -347,7 +347,7 @@ module.exports = {
 
     const user = await users.findOne({ _id: user_id, is_deleted: false });
     if (user) {
-      var updatesocketid = await users.findByIdAndUpdate(
+      await users.findByIdAndUpdate(
         { _id: user_id },
         {
           $set: {
@@ -970,7 +970,7 @@ module.exports = {
             };
           }
 
-          var submit_gif = await round_submission.create(createData);
+          let submit_gif = await round_submission.create(createData);
 
           console.log("create_submit_gif", submit_gif);
         }
@@ -1078,7 +1078,7 @@ module.exports = {
         message_type: message_type,
       };
 
-      let addMessage = await game_chat.create(insertData);
+      await game_chat.create(insertData);
 
       var res_data = await socketSuccessRes(
         "Message sent successfully",
@@ -1902,7 +1902,7 @@ module.exports = {
   }, */
 
   selectWinGIF: async (data) => {
-    var { game_id, round_submission_id, user_id } = data;
+    var { game_id, round_submission_id } = data;
 
     var is_reveal_call = false;
 
@@ -3048,7 +3048,7 @@ module.exports = {
 
     const find_user = await users.findOne({ _id: user_id, is_deleted: false });
     if (find_user) {
-      var updatesocketid = await users.findByIdAndUpdate(
+      await users.findByIdAndUpdate(
         { _id: user_id },
         {
           $set: {
@@ -3363,7 +3363,7 @@ module.exports = {
   }, */
 
   getGameAllMessage: async (data) => {
-    let { game_id, user_id, page = 1, skip = 0, limit = 10 } = data;
+    let { game_id, user_id, skip = 0, limit = 10 } = data;
 
     var findAllMessage = await game_chat
       .find({
@@ -3395,7 +3395,7 @@ module.exports = {
   },
 
   getUserDetails: async (data) => {
-    let { user_id, game_id } = data;
+    let { game_id } = data;
     // let game_code = Math.floor(100000 + Math.random() * 900000);
 
     // let user_data = await users.findById(user_id);

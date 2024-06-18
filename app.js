@@ -96,7 +96,7 @@ cron.schedule("*/59 * * * *", async () => {
     );
 
     if (update_subscription) {
-      var update_user = await users.findOneAndUpdate(
+      await users.findOneAndUpdate(
         {
           _id: value?.user_id,
           is_deleted: false,

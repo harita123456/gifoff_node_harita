@@ -77,9 +77,9 @@ const appVersionCheck = async (req, res) => {
       if (device_token != undefined && device_token != null) {
         if (app_platform) {
           if (app_platform == "ios") {
-            var device_type = "ios";
+            // var device_type = "ios";
           } else {
-            var device_type = "android";
+            // var device_type = "android";
           }
         }
       }

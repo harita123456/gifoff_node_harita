@@ -21,9 +21,6 @@ const {
   disconnect,
 } = require("./games_event");
 
-const users = require("../../api/models/M_user");
-const games = require("../../api/models/M_games");
-const mongoose = require("mongoose");
 const { socketSuccessRes, socketErrorRes } = require("../../utils/common_fun");
 
 module.exports = function (io) {

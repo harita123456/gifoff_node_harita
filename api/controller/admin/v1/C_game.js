@@ -171,7 +171,7 @@ const deleteGame = async (req, res) => {
       return errorRes(res, "Could't found game");
     }
 
-    var update_data = await games.findByIdAndUpdate(
+    await games.findByIdAndUpdate(
       game_id,
       { $set: { is_deleted: true } },
       {

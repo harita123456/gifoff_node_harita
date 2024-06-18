@@ -65,7 +65,7 @@ const addMembership = async (req, res) => {
     var insert_payment = await payment.create(insert_data);
 
     if (insert_payment) {
-      var update_user = await users.findByIdAndUpdate(
+      await users.findByIdAndUpdate(
         {
           _id: user_id,
           is_deleted: false,
