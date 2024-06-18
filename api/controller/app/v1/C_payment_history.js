@@ -22,10 +22,11 @@ const {
 
 const addMembership = async (req, res) => {
   try {
+    let user_id;
     if (!req.body.user_id) {
-      var user_id = req.user._id;
+      user_id = req.user._id;
     } else {
-      var user_id = req.body.user_id;
+      user_id = req.body.user_id;
     }
     var {
       payment_status,
