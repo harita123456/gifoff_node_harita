@@ -68,7 +68,6 @@ const notiSendMultipleDevice = async (data) => {
     noti_msg,
     noti_for,
     id,
-    noti_image,
     details,
   } = data;
 

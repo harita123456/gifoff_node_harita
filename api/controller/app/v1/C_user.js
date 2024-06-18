@@ -29,7 +29,6 @@ const {
 //   notiSendMultipleDevice,
 // } = require("../../../../utils/notification_send");
 // const { ObjectId } = require("mongodb");
-const { dateTime } = require("../../../../utils/date_time");
 
 const signup = async (req, res) => {
   try {

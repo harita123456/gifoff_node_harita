@@ -3482,7 +3482,7 @@ module.exports = {
           );
         } else {
           // Check if the player is already in the game
-          const checkPlayers = await games
+          await games
             .findById(filteredGames[0]._id)
             .where({ players_ids: user_id });
 
