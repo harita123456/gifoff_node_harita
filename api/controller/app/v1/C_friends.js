@@ -217,6 +217,8 @@ const friendList = async (req, res) => {
 
     const deleteUserIds = deleted_users?.map((block) => block._id);
 
+    let frnd_cond;
+
     if (search_data) {
       var searched_user = await users.find({
         is_deleted: false,
@@ -225,9 +227,9 @@ const friendList = async (req, res) => {
 
       var searchedUserIds = searched_user?.map((user) => user._id);
 
-      var frnd_cond = { $nin: deleteUserIds, $in: searchedUserIds };
+      frnd_cond = { $nin: deleteUserIds, $in: searchedUserIds };
     } else {
-      var frnd_cond = { $nin: deleteUserIds };
+      frnd_cond = { $nin: deleteUserIds };
     }
 
     let friend_list = await friends

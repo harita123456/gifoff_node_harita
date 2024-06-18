@@ -133,7 +133,7 @@ module.exports = {
       )
       .sort({ createdAt: -1 });
 
-    var res_data = await Promise.all(
+    let res_data = await Promise.all(
       findMatch.map(async (value, res) => {
         // transfer amount to hired provider
 
@@ -180,7 +180,7 @@ module.exports = {
       )
       .sort({ createdAt: -1 });
 
-    var res_data = await Promise.all(
+    let res_data = await Promise.all(
       findMatch.map(async (value, res) => {
         // transfer amount to hired provider
 
@@ -378,7 +378,7 @@ module.exports = {
       // If maximum players reached, abort transaction
       await session.abortTransaction();
       session.endSession();
-      var res_data = await socketErrorRes(
+      let res_data = await socketErrorRes(
         "You can't join this game because there is no more player required"
       );
       return res_data;
@@ -431,7 +431,7 @@ module.exports = {
 
     if (findMatch) {
       if (findMatch.game_status == "completed") {
-        var res_data = await socketErrorRes(
+        let res_data = await socketErrorRes(
           "You can't join this game because it's completed"
         );
 
@@ -446,14 +446,14 @@ module.exports = {
             }
           });
 
-          var res_data = await socketSuccessRes(
+          let res_data = await socketSuccessRes(
             "You already joined this game",
             findPlayerInMatch
           );
           return res_data;
         } else if (findExistingPlayerInMatch) {
           if (findMatch.game_status == "completed") {
-            var res_data = await socketErrorRes(
+            let res_data = await socketErrorRes(
               "You can't join this game because it's completed"
             );
 
@@ -527,7 +527,7 @@ module.exports = {
               is_all_submitted,
             };
 
-            var res_data = await socketSuccessRes(
+            let res_data = await socketSuccessRes(
               "You are successfully joined in this game",
               findExistingPlayerInMatchData
             );
@@ -536,12 +536,12 @@ module.exports = {
           }
         } else {
           if (findMatch.game_status == "in_progress") {
-            var res_data = await socketErrorRes(
+            let res_data = await socketErrorRes(
               "You can't join the game because it has already started"
             );
             return res_data;
           } else if (findMatch.game_status == "completed") {
-            var res_data = await socketErrorRes(
+            let res_data = await socketErrorRes(
               "You can't join this game because it's completed"
             );
 
@@ -611,7 +611,7 @@ module.exports = {
 
             updateMatch = { ...updateMatch._doc, is_all_submitted };
 
-            var res_data = await socketSuccessRes(
+            let res_data = await socketSuccessRes(
               "You are successfully joined in this game",
               updateMatch
             );
@@ -620,7 +620,7 @@ module.exports = {
         }
       }
     } else {
-      var res_data = await socketErrorRes("Game not found");
+      let res_data = await socketErrorRes("Game not found");
       return res_data;
     }
   },
@@ -632,16 +632,16 @@ module.exports = {
 
     if (findMatch) {
       if (findMatch.game_status == "in_progress") {
-        var res_data = await socketErrorRes("The game has already started");
+        let res_data = await socketErrorRes("The game has already started");
         return res_data;
       } else if (findMatch.game_status == "completed") {
-        var res_data = await socketErrorRes("The game is already completed");
+        let res_data = await socketErrorRes("The game is already completed");
         return res_data;
       } else if (findMatch.user_id.toString() != user_id) {
-        var res_data = await socketErrorRes("You can't start this game");
+        let res_data = await socketErrorRes("You can't start this game");
         return res_data;
       } else if (findMatch.players_ids.length < process.env.MINIMUM_PLAYER) {
-        var res_data = await socketErrorRes(
+        let res_data = await socketErrorRes(
           "You can't start this game because the minimum limit of player for start the game is " +
             process.env.MINIMUM_PLAYER
         );
@@ -740,14 +740,14 @@ module.exports = {
           );
         });
 
-        var res_data = await socketSuccessRes(
+        let res_data = await socketSuccessRes(
           "Game is started now",
           updateMatch
         );
         return res_data;
       }
     } else {
-      var res_data = await socketErrorRes("Game not found");
+      let res_data = await socketErrorRes("Game not found");
       return res_data;
     }
   },
@@ -759,12 +759,12 @@ module.exports = {
 
     if (findMatch) {
       if (findMatch.game_status == "waiting") {
-        var res_data = await socketErrorRes(
+        let res_data = await socketErrorRes(
           "The game has been waiting for other player"
         );
         return res_data;
       } else if (findMatch.game_status == "completed") {
-        var res_data = await socketErrorRes("The game is already completed");
+        let res_data = await socketErrorRes("The game is already completed");
         return res_data;
       } else {
         var clue_list_count = await clues
@@ -816,7 +816,7 @@ module.exports = {
             $push: { clue_ids: find_clue._id },
           });
 
-          var res_data = await socketSuccessRes(
+          let res_data = await socketSuccessRes(
             "Clue generated successfully",
             find_clue
           );
@@ -877,7 +877,7 @@ module.exports = {
             );
             return res_data;
           } else {
-            var res_data = await socketErrorRes(
+            let res_data = await socketErrorRes(
               "No clues are available in this category"
             );
             return res_data;
@@ -885,7 +885,7 @@ module.exports = {
         }
       }
     } else {
-      var res_data = await socketErrorRes("Game not found");
+      let res_data = await socketErrorRes("Game not found");
       return res_data;
     }
   },
@@ -908,7 +908,7 @@ module.exports = {
 
     if (findMatch) {
       if (round != findMatch.current_round) {
-        var res_data = await socketErrorRes("The round was not found");
+        let res_data = await socketErrorRes("The round was not found");
         return res_data;
       } else {
         let get_data = await round_submission.findOne({
@@ -1018,14 +1018,14 @@ module.exports = {
 
         get_submit_gif = { ...get_submit_gif._doc, is_all_submitted };
 
-        var res_data = await socketSuccessRes(
+        let res_data = await socketSuccessRes(
           "GIF submitted successfully",
           get_submit_gif
         );
         return res_data;
       }
     } else {
-      var res_data = await socketErrorRes("Game not found");
+      let res_data = await socketErrorRes("Game not found");
       return res_data;
     }
   },
@@ -1080,7 +1080,7 @@ module.exports = {
 
       await game_chat.create(insertData);
 
-      var res_data = await socketSuccessRes(
+      let res_data = await socketSuccessRes(
         "Message sent successfully",
         response_data
       );
@@ -1088,7 +1088,7 @@ module.exports = {
       return res_data;
       // }
     } else {
-      var res_data = await socketErrorRes("Game not found");
+      let res_data = await socketErrorRes("Game not found");
       return res_data;
     }
   },
@@ -2214,7 +2214,7 @@ module.exports = {
           session.endSession();
 
           // Return success response
-          var res_data = await socketSuccessRes(
+          let res_data = await socketSuccessRes(
             "Winner declared successfully",
             send_result
           );
@@ -2224,7 +2224,7 @@ module.exports = {
         // }
       } else {
         // Game not found
-        var res_data = await socketErrorRes("Game not found");
+        let res_data = await socketErrorRes("Game not found");
         return res_data;
       }
     } catch (error) {
@@ -2238,7 +2238,7 @@ module.exports = {
       session.endSession();
 
       // Return an error response
-      var res_data = await socketErrorRes("Something went wrong!");
+      let res_data = await socketErrorRes("Something went wrong!");
       return res_data;
     }
   },
@@ -3154,20 +3154,20 @@ module.exports = {
           await findMatch.save();
         }
 
-        var res_data = await socketSuccessRes(
+        let res_data = await socketSuccessRes(
           "Game leave successfully",
           updateMatch
         );
 
         return res_data;
       } else {
-        var res_data = await socketErrorRes(
+        let res_data = await socketErrorRes(
           "You are not a player of this game"
         );
         return res_data;
       }
     } else {
-      var res_data = await socketErrorRes("Game not found");
+      let res_data = await socketErrorRes("Game not found");
       return res_data;
     }
   },
@@ -3257,7 +3257,7 @@ module.exports = {
           session.endSession();
 
           // Return success response
-          var res_data = await socketSuccessRes(
+          let res_data = await socketSuccessRes(
             "Winner declared successfully",
             result_array
           );
@@ -3265,7 +3265,7 @@ module.exports = {
         } else {
           // No winner found
 
-          var res_data = await socketErrorRes("No winner found");
+          let res_data = await socketErrorRes("No winner found");
           return res_data;
         }
       }
