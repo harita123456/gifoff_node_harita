@@ -32,7 +32,7 @@ const searchUserList = async (req, res) => {
       _id: { $ne: user_id },
     };
 
-    if (search_data != undefined && search_data != "" && search_data != null) {
+    if (search_data != undefined && search_data != "") {
       whereCond = {
         ...whereCond,
         name: { $regex: search_data, $options: "i" },

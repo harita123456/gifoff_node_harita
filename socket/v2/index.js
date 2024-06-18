@@ -161,7 +161,6 @@ module.exports = function (io) {
         var data = JSON.parse(data);
         if (
           data.chat_room_id != undefined &&
-          data.chat_room_id != null &&
           data.chat_room_id != ""
         ) {
           socket.join(data.chat_room_id);

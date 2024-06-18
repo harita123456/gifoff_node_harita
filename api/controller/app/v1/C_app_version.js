@@ -73,7 +73,7 @@ const appVersionCheck = async (req, res) => {
         };
       }
 
-      if (device_token != undefined && device_token != null) {
+      if (device_token != undefined) {
         if (app_platform) {
           if (app_platform == "ios") {
             // var device_type = "ios";

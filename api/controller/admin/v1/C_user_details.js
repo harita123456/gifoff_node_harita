@@ -88,12 +88,8 @@ const getUserdetails = async (req, res) => {
         ...find_user._doc,
         friend_count:friend_count
       }
-
-      if (!find_user) {
-        return errorRes(res, "Couldn't found user");
-      } else {
-        return successRes(res, `User details get successfully`, find_user);
-      }
+        
+      return successRes(res, `User details get successfully`, find_user);
     }
   } catch (error) {
     console.log("Error : ", error);
