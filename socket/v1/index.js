@@ -140,10 +140,12 @@ module.exports = function (io) {
         // // var data = JSON.parse(data);
         let match_list = await matchDetails(data);
 
+        let res_data;
+
         if (match_list == null) {
-          var res_data = await socketErrorRes("Game details not found", []);
+          res_data = await socketErrorRes("Game details not found", []);
         } else {
-          var res_data = await socketSuccessRes(
+          res_data = await socketSuccessRes(
             "Game details get sucessfully",
             match_list
           );

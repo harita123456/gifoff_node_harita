@@ -90,10 +90,11 @@ const addMembership = async (req, res) => {
 
 const checkMembership = async (req, res) => {
   try {
+    let user_id;
     if (!req.body.user_id) {
-      var user_id = req.user._id;
+      user_id = req.user._id;
     } else {
-      var user_id = req.body.user_id;
+      user_id = req.body.user_id;
     }
 
     var find_user = await users.findOne({
@@ -131,10 +132,13 @@ const checkMembership = async (req, res) => {
 
 const cancelMebership = async (req, res) => {
   try {
+
+    let user_id;
+
     if (!req.body.user_id) {
-      var user_id = req.user._id;
+      user_id = req.user._id;
     } else {
-      var user_id = req.body.user_id;
+      user_id = req.body.user_id;
     }
 
     var { membership_id, expiry_date } = req.body;
@@ -179,10 +183,11 @@ const cancelMebership = async (req, res) => {
 
 const removeMebership = async (req, res) => {
   try {
+    let user_id;
     if (!req.body.user_id) {
-      var user_id = req.user._id;
+      user_id = req.user._id;
     } else {
-      var user_id = req.body.user_id;
+      user_id = req.body.user_id;
     }
 
     console.log("removeMebership - req.body ->>", req.body);
@@ -215,10 +220,11 @@ const removeMebership = async (req, res) => {
 
 const updateMembership = async (req, res) => {
   try {
+    let user_id;
     if (!req.body.user_id) {
-      var user_id = req.user._id;
+      user_id = req.user._id;
     } else {
-      var user_id = req.body.user_id;
+      user_id = req.body.user_id;
     }
 
     var { membership_id, expiry_date } = req.body;

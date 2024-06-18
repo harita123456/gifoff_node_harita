@@ -339,10 +339,11 @@ const changePassword = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
+    let user_id;
     if (!req.body.user_id) {
-      var user_id = req.user._id;
+      user_id = req.user._id;
     } else {
-      var user_id = req.body.user_id;
+      user_id = req.body.user_id;
     }
 
     var find_admin = await users.findById(user_id).where({

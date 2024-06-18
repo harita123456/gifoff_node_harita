@@ -95,11 +95,12 @@ module.exports = {
             last_message_time = null;
           }
           
+        let other_user;
 
         if (value.user_id == user_id) {
-          var other_user = value.other_user_id;
+          other_user = value.other_user_id;
         } else {
-          var other_user = value.user_id;
+          other_user = value.user_id;
         }
 
         let findOtherUser = await users

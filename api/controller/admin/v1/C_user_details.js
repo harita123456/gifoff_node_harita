@@ -112,7 +112,7 @@ const blockUser = async (req, res) => {
         return errorRes(res, "Could't found user");
       }
       if (find_user?.is_block == false || find_user?.is_block == "false") {
-        var update_user = await users.findByIdAndUpdate(
+        let update_user = await users.findByIdAndUpdate(
           { _id: user_id },
           { $set: { is_block: true } },
           {
@@ -121,7 +121,7 @@ const blockUser = async (req, res) => {
         );
         return successRes(res, `Account block successfully`, update_user);
       } else {
-        var update_user = await users.findByIdAndUpdate(
+        let update_user = await users.findByIdAndUpdate(
           { _id: user_id },
           { $set: { is_block: false } },
           {
